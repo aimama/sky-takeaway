@@ -1,5 +1,7 @@
 package com.sky.constant;
 
+import com.aliyun.oss.common.utils.CRC64;
+
 /**
  * 状态常量，启用或者禁用
  */
