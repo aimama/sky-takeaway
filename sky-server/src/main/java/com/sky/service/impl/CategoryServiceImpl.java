@@ -61,12 +61,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO, category);
 
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
+//        category.setCreateTime(LocalDateTime.now());
+//        category.setUpdateTime(LocalDateTime.now());
         category.setStatus(0);
 
-        category.setCreateUser(Thread.currentThread().getId());
-        category.setUpdateUser(Thread.currentThread().getId());
+//        category.setCreateUser(Thread.currentThread().getId());
+//        category.setUpdateUser(Thread.currentThread().getId());
 
         categoryMapper.insert(category);
     }
@@ -115,8 +115,8 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = Category.builder()
                 .status(status)
                 .id(id)
-                .updateTime(LocalDateTime.now())
-                .updateUser(Thread.currentThread().getId())
+//                .updateTime(LocalDateTime.now())
+//                .updateUser(Thread.currentThread().getId())
                 .build();
         categoryMapper.update(category);
     }
@@ -141,8 +141,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void update(CategoryDTO categoryDTO) {
         Category category = Category.builder()
-                .updateUser(Thread.currentThread().getId())
-                .updateTime(LocalDateTime.now())
+//                .updateUser(Thread.currentThread().getId())
+//                .updateTime(LocalDateTime.now())
                 .build();
         BeanUtils.copyProperties(categoryDTO,category);
 

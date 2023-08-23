@@ -80,16 +80,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         //使用BeanUtils中的工具类直接拷贝
         BeanUtils.copyProperties(employeeDTO, employee);
         //设置创建时间与修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
         //设置默认允许登录
         employee.setStatus(StatusConstant.ENABLE);
         //设置密码，采用MD5设置
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         //设置当前记录人的ID与修改人的ID TODO 后期需要改写为当前用户登录的ID(完成。使用ThreadLocal存取当前线程的ID)
         System.out.println("当前线程ID：" + Thread.currentThread().getId());
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
     }
@@ -156,8 +156,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = Employee.builder()
-                .updateTime(LocalDateTime.now())
-                .updateUser(Thread.currentThread().getId())     //设置修改人
+//                .updateTime(LocalDateTime.now())
+//                .updateUser(Thread.currentThread().getId())     //设置修改人
                 .build();
 
         BeanUtils.copyProperties(employeeDTO, employee);
