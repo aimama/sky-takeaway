@@ -21,12 +21,12 @@ import com.sky.result.Result;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -60,6 +60,7 @@ public class DishServiceImpl implements DishService {
 
         List<DishFlavor> flavors = dishDTO.getFlavors();
 
+        //TODO ????
         if (flavors != null && flavors.size() > 0) {
             flavors.forEach(dishFlavor -> {
                 dishFlavor.setDishId(dishId);
@@ -93,6 +94,7 @@ public class DishServiceImpl implements DishService {
      * @param dishDTO
      */
     @Override
+    @Transactional
     public void update(DishDTO dishDTO) {
         //涉及三张表的修改，菜品表（category），口味表（dishFlavor），菜品分类表（category）
         Dish dish = new Dish();
@@ -124,10 +126,14 @@ public class DishServiceImpl implements DishService {
      * @return
      */
     @Override
-    public DishDTO getById(Long id) {
-        DishDTO dishDto = dishMapper.getById(id);
-
-        return dishDto;
+    public DishVO getById(Long id) {
+        //菜品查询
+        DishVO dishVO = dishMapper.getById(id);
+        //口味查询
+        List<DishFlavor> bf = dishFlavorMapper.getById(id);
+        //封装
+        dishVO.setFlavors(bf);
+        return dishVO;
     }
 
     /**
@@ -152,9 +158,9 @@ public class DishServiceImpl implements DishService {
         //在售不可删除
         for (Long id : ids) {
             //查询是否在在售状态，在则无法删除
-            DishDTO dishDTO = dishMapper.getById(id);
+            DishVO dishVO = dishMapper.getById(id);
 
-            if (dishDTO.getStatus() == StatusConstant.ENABLE) {
+            if (dishVO.getStatus() == StatusConstant.ENABLE) {
                 //在售不能删除
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
             }
@@ -181,5 +187,36 @@ public class DishServiceImpl implements DishService {
 
 
     }
+
+    /**
+     * 根据分类id获取对应菜品信息
+     *
+     * @return
+     */
+    @Override
+    public List<Dish> getByCategoryId(String name,Long categoryId) {
+        //两种情况要求获取对应菜品信息    1.id获取      2.name获取
+        //要求name获取信息
+        if(name != null && name.length() > 0) {
+            log.info("Service:{}",name);
+            List<Dish> dishByName_to_setmeal = dishMapper.getByName_to_setmeal(name);
+            return dishByName_to_setmeal;
+        }
+        //要求id获取
+        List<Dish> dishesByCategoryId = dishMapper.getByCategoryId(categoryId);
+        return dishesByCategoryId;
+    }
+
+//    /**
+//     * 根据名称获取对应信息（用于套餐管理的快速查询）
+//     *
+//     * @param name
+//     * @return
+//     */
+//    @Override
+//    public List<Dish> getByName(String name) {
+//        List<Dish> dishes = dishMapper.getByName_to_Setmeal(name);
+//        return dishes;
+//    }
 
 }

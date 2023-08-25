@@ -36,4 +36,9 @@
         order by d.create_time desc
     </select>
 
+<!--    <select id="getByName_to_setmeal" resultType="com.sky.entity.Dish">-->
+<!--        select * from dish where name like concat('%','name','%')-->
+<!--    </select>-->
+
+
 </mapper>

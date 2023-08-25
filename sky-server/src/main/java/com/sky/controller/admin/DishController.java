@@ -6,6 +6,7 @@ import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -61,11 +62,11 @@ public class DishController {
      */
     @GetMapping("/{id}")
     @ApiOperation("回显菜品信息")
-    public Result<DishDTO> getById(@PathVariable Long id) {
+    public Result<DishVO> getById(@PathVariable Long id) {
         log.info("根据Id显示菜品信息（回显）:{}", id);
-        DishDTO dishDTO = dishService.getById(id);
+        DishVO dishVO = dishService.getById(id);
 
-        return Result.success(dishDTO);
+        return Result.success(dishVO);
     }
 
     /**
@@ -86,28 +87,61 @@ public class DishController {
 
     /**
      * 起售停售
+     *
      * @param status
      * @return
      */
     @PostMapping("/status/{status}")
     @ApiOperation("起售停售")
-    public Result startAndStop(@PathVariable Integer status,Long id) {
-        log.info("修改起售停售信息：status = {},id = {}",status,id);
-        dishService.startAndStop(status,id);
+    public Result startAndStop(@PathVariable Integer status, Long id) {
+        log.info("修改起售停售信息：status = {},id = {}", status, id);
+        dishService.startAndStop(status, id);
         return Result.success();
     }
 
     /**
      * 根据Id批量删除菜品信息
+     *
      * @param ids
      * @return
      */
     @DeleteMapping
     @ApiOperation("批量删除菜品信息")
-    public Result deleteByIds(@RequestParam List<Long> ids){
+    public Result deleteByIds(@RequestParam List<Long> ids) {
         log.info("批量删除菜品信息");
         dishService.deleteByIds(ids);
         return Result.success();
     }
+
+    /**
+     * 根据分类id获取对应菜品信息
+     *
+     * @return
+     */
+    //TODO 用于新增套餐中选择菜品接口
+    @GetMapping("/list")
+    @ApiOperation("根据要求获取对应菜品信息(套餐管理查询菜品)")
+    public Result<List<Dish>> getByCategoryId( String name ,Long categoryId) {
+        log.info("根据分类要求获取对应菜品信息,其参数如下：{},name = {}", categoryId,name);
+
+        List<Dish> Dishes = dishService.getByCategoryId(name,categoryId);
+
+        return Result.success(Dishes);
+    }
+
+//    /**
+//     * 根据名称获取对应信息（用于套餐管理的快速查询）
+//     *
+//     * @param name
+//     * @return
+//     */
+//    @ApiOperation("根据名称获取对应信息（用于套餐管理的快速查询）")
+//    @GetMapping("/list/name")
+//    public Result<List<Dish>> getByName(String name) {
+//        log.info("根据名称获取对应信息（用于套餐管理的快速查询）,其参数为{}", name);
+//        List<Dish> results = dishService.getByName(name);
+//        return Result.success(results);
+//
+//    }
 
 }
