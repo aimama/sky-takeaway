@@ -43,4 +43,8 @@ public class GlobalExceptionHandler {
         }
     }
 
+    public Result exceptionHandler(String ex) {
+        log.info("异常信息：{}",ex);
+        return Result.error(ex);
+    }
 }
