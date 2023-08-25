@@ -1,16 +1,16 @@
 package com.sky.controller.admin;
 
 import com.sky.dto.DishDTO;
+import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Api(tags = "菜品接口")
@@ -35,4 +35,50 @@ public class DishController {
         return Result.success();
     }
 
+    /**
+     * 菜品的分页查询
+     *
+     * @param dishPageQueryDTO
+     * @return
+     */
+    @GetMapping("/page")
+    @ApiOperation("菜品的分类查询")
+    public Result<PageResult> pageQuery(DishPageQueryDTO dishPageQueryDTO) {
+        log.info("正在请求分页查询:{}", dishPageQueryDTO);
+
+        PageResult results = dishService.pageQuery(dishPageQueryDTO);
+
+        return Result.success(results);
+    }
+
+    /**
+     * 根据Id查询信息(回显)
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ApiOperation("回显菜品信息")
+    public Result<DishDTO> getById(@PathVariable Long id) {
+        log.info("根据Id显示菜品信息（回显）:{}", id);
+        DishDTO dishDTO = dishService.getById(id);
+
+        return Result.success(dishDTO);
+    }
+
+    /**
+     * 修改菜品
+     *
+     * @param dishDTO
+     * @return
+     */
+    @PutMapping
+    @ApiOperation("修改菜品信息")
+    public Result update(@RequestBody DishDTO dishDTO) {
+        log.info("修改菜品：{}", dishDTO);
+
+        dishService.update(dishDTO);
+
+        return Result.success();
+    }
 }
