@@ -6,6 +6,7 @@ import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -61,11 +62,11 @@ public class DishController {
      */
     @GetMapping("/{id}")
     @ApiOperation("回显菜品信息")
-    public Result<DishDTO> getById(@PathVariable Long id) {
+    public Result<DishVO> getById(@PathVariable Long id) {
         log.info("根据Id显示菜品信息（回显）:{}", id);
-        DishDTO dishDTO = dishService.getById(id);
+        DishVO dishVO = dishService.getById(id);
 
-        return Result.success(dishDTO);
+        return Result.success(dishVO);
     }
 
     /**

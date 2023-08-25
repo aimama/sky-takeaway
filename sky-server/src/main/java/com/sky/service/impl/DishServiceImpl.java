@@ -93,6 +93,7 @@ public class DishServiceImpl implements DishService {
      * @param dishDTO
      */
     @Override
+    @Transactional
     public void update(DishDTO dishDTO) {
         //涉及三张表的修改，菜品表（category），口味表（dishFlavor），菜品分类表（category）
         Dish dish = new Dish();
@@ -124,10 +125,14 @@ public class DishServiceImpl implements DishService {
      * @return
      */
     @Override
-    public DishDTO getById(Long id) {
-        DishDTO dishDto = dishMapper.getById(id);
-
-        return dishDto;
+    public DishVO getById(Long id) {
+        //菜品查询
+        DishVO dishVO = dishMapper.getById(id);
+        //口味查询
+        List<DishFlavor> bf = dishFlavorMapper.getById(id);
+        //封装
+        dishVO.setFlavors(bf);
+        return dishVO;
     }
 
     /**
@@ -152,9 +157,9 @@ public class DishServiceImpl implements DishService {
         //在售不可删除
         for (Long id : ids) {
             //查询是否在在售状态，在则无法删除
-            DishDTO dishDTO = dishMapper.getById(id);
+            DishVO dishVO = dishMapper.getById(id);
 
-            if (dishDTO.getStatus() == StatusConstant.ENABLE) {
+            if (dishVO.getStatus() == StatusConstant.ENABLE) {
                 //在售不能删除
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
             }

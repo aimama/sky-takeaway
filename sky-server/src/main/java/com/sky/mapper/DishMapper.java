@@ -32,7 +32,7 @@ public interface DishMapper {
     void update(Dish dish);
     //回显
     @Select("select * from dish where id = #{id}")
-    DishDTO getById(Long id);
+    DishVO getById(Long id);
     //删除菜品
     @Delete("delete from dish where id = #{id}")
     void deleteById(Long id);
