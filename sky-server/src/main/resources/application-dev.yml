@@ -12,3 +12,9 @@ sky:
     access-key-secret: fVHBR3dYxCp5ywh4p8l94RiBOor6Os
     bucket-name: learn-sky-take-out
     endpoint: oss-cn-nanjing.aliyuncs.com
+
+  redis:
+    host: localhost
+    port: 6379
+    password: 252240
+    database: 10
