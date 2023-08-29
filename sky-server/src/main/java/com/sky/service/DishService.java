@@ -2,7 +2,6 @@ package com.sky.service;
 
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
-import com.sky.entity.Category;
 import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.vo.DishVO;
@@ -32,6 +31,13 @@ public interface DishService {
      * @return
      */
     List<Dish> getByCategoryId(String name,Long categoryId);
+
+    /**
+     * 条件查询菜品和口味
+     * @param dish
+     * @return
+     */
+    List<DishVO> listWithFlavor(Dish dish);
 //    /**
 //     * 根据名称获取对应信息（用于套餐管理的快速查询）
 //     *

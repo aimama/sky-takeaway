@@ -13,6 +13,9 @@ spring:
       username: ${sky.datasource.username}
       password: ${sky.datasource.password}
 
+      mysql:
+        usePingMethod=false:
+
   redis:
     port: ${sky.redis.port}
     password: ${sky.redis.password}
@@ -43,10 +46,19 @@ sky:
     admin-ttl: 72000000000000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+    #微信前端传递过来的令牌数据
+    user-secret-key: token
+    user-ttl: 72000000000000
+    user-token-name: authentication
+
 
   alioss:
     access-key-secret: ${sky.alioss.access-key-secret}
     access-key-id: ${sky.alioss.access-key-id}
     endpoint: ${sky.alioss.endpoint}
     bucket-name: ${sky.alioss.bucket-name}
+  #微信配置
+  wechat:
+    appid: ${sky.wechat.appid}
+    secret: ${sky.wechat.secret}
 

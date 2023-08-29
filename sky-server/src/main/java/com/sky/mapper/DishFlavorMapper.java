@@ -1,9 +1,7 @@
 package com.sky.mapper;
 
-import com.sky.annotation.AutoFill;
 import com.sky.dto.DishDTO;
 import com.sky.entity.DishFlavor;
-import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -28,4 +26,7 @@ public interface DishFlavorMapper {
     //回显
     @Select("select * from dish_flavor where id = #{id}")
     List<DishFlavor> getById(Long id);
+    //根据ID查询对应的口味
+    @Select("select * from dish_flavor where id = #{id}")
+    List<DishFlavor> getByDishId(Long id);
 }

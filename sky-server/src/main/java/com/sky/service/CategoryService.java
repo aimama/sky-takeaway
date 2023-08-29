@@ -3,9 +3,7 @@ package com.sky.service;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
-import com.sky.entity.Dish;
 import com.sky.result.PageResult;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -55,4 +53,10 @@ public interface CategoryService {
      * @param categoryDTO
      */
     void update(CategoryDTO categoryDTO);
+    /**
+     * 查询分类
+     * @param type
+     * @return
+     */
+    List<Category> list(Integer type);
 }
