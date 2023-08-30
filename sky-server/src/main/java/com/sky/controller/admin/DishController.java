@@ -11,9 +11,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Api(tags = "菜品接口")
@@ -22,6 +24,8 @@ import java.util.List;
 public class DishController {
     @Autowired
     private DishService dishService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 新增菜品
@@ -34,6 +38,11 @@ public class DishController {
     public Result save(@RequestBody DishDTO dishDTO) {
         log.info("新增菜品");
         dishService.save(dishDTO);
+
+        //清除缓存(目的：保持数据的一致性)
+        String key = "dish_" + dishDTO.getCategoryId();
+        cleanCache(key);
+        log.info("为保持数据一致性，已清除缓存");
 
         return Result.success();
     }
@@ -82,6 +91,11 @@ public class DishController {
 
         dishService.update(dishDTO);
 
+        //清除缓存(目的：保持数据的一致性)
+        String key = "dish_" + dishDTO.getCategoryId();
+        cleanCache(key);
+        log.info("为保持数据一致性，已清除缓存");
+
         return Result.success();
     }
 
@@ -96,6 +110,12 @@ public class DishController {
     public Result startAndStop(@PathVariable Integer status, Long id) {
         log.info("修改起售停售信息：status = {},id = {}", status, id);
         dishService.startAndStop(status, id);
+
+        //清除缓存(目的：保持数据的一致性)
+        String key = "dish_*";
+        cleanCache(key);
+        log.info("为保持数据一致性，已清除缓存");
+
         return Result.success();
     }
 
@@ -110,6 +130,12 @@ public class DishController {
     public Result deleteByIds(@RequestParam List<Long> ids) {
         log.info("批量删除菜品信息");
         dishService.deleteByIds(ids);
+
+        //清除缓存(目的：保持数据的一致性),全部清除缓存
+        String key = "dish_*";
+        cleanCache(key);
+        log.info("为保持数据一致性，已清除缓存");
+
         return Result.success();
     }
 
@@ -121,27 +147,22 @@ public class DishController {
     //TODO 用于新增套餐中选择菜品接口
     @GetMapping("/list")
     @ApiOperation("根据要求获取对应菜品信息(套餐管理查询菜品)")
-    public Result<List<Dish>> getByCategoryId( String name ,Long categoryId) {
-        log.info("根据分类要求获取对应菜品信息,其参数如下：{},name = {}", categoryId,name);
+    public Result<List<Dish>> getByCategoryId(String name, Long categoryId) {
+        log.info("根据分类要求获取对应菜品信息,其参数如下：{},name = {}", categoryId, name);
 
-        List<Dish> Dishes = dishService.getByCategoryId(name,categoryId);
+        List<Dish> Dishes = dishService.getByCategoryId(name, categoryId);
 
         return Result.success(Dishes);
     }
 
-//    /**
-//     * 根据名称获取对应信息（用于套餐管理的快速查询）
-//     *
-//     * @param name
-//     * @return
-//     */
-//    @ApiOperation("根据名称获取对应信息（用于套餐管理的快速查询）")
-//    @GetMapping("/list/name")
-//    public Result<List<Dish>> getByName(String name) {
-//        log.info("根据名称获取对应信息（用于套餐管理的快速查询）,其参数为{}", name);
-//        List<Dish> results = dishService.getByName(name);
-//        return Result.success(results);
-//
-//    }
+    /**
+     * 清除缓存数据
+     * @param pattern
+     */
+    public void cleanCache(String pattern) {
+        Set keys = redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
+    }
+
 
 }

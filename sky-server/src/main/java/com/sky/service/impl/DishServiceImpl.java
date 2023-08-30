@@ -226,16 +226,4 @@ public class DishServiceImpl implements DishService {
         return dishVOList;
     }
 
-//    /**
-//     * 根据名称获取对应信息（用于套餐管理的快速查询）
-//     *
-//     * @param name
-//     * @return
-//     */
-//    @Override
-//    public List<Dish> getByName(String name) {
-//        List<Dish> dishes = dishMapper.getByName_to_Setmeal(name);
-//        return dishes;
-//    }
-
 }

@@ -3,7 +3,6 @@ package com.sky.controller.admin;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
-import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
@@ -17,9 +16,10 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@Api(tags = "菜品分类相关类")
+@Api(tags = "分类相关接口")
 @RequestMapping("/admin/category")
 public class CategoryController {
+
     @Autowired(required = false)
     private CategoryService categoryService;
 

@@ -59,7 +59,7 @@ public interface DishMapper {
     List<Dish> getByName_to_setmeal(@Param(value = "name") String name);
 
     //根据菜品名查询
-    @Select("select * from dish where category_id = #{categoryId}")
+    @Select("select * from dish where category_id = #{categoryId} and status = #{status}")
     List<Dish> list(Dish dish);
 
 
