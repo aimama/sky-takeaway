@@ -33,12 +33,13 @@ public class AddressBookServiceImpl implements AddressBookService {
      */
     public void save(AddressBook addressBook) {
         addressBook.setUserId(BaseContext.getCurrentId());
+        //默认不能为默认地址
         addressBook.setIsDefault(0);
         addressBookMapper.insert(addressBook);
     }
 
     /**
-     * 根据id查询
+     * 根据id查询(回显)
      *
      * @param id
      * @return
@@ -65,6 +66,7 @@ public class AddressBookServiceImpl implements AddressBookService {
     @Transactional
     public void setDefault(AddressBook addressBook) {
         //1、将当前用户的所有地址修改为非默认地址 update address_book set is_default = ? where user_id = ?
+        //TODO 思想：(将所有都设为非默认：0，再依据userId去更改其为默认：1       省去了查询默认地址的id后再去修改为非默认的步骤)
         addressBook.setIsDefault(0);
         addressBook.setUserId(BaseContext.getCurrentId());
         addressBookMapper.updateIsDefaultByUserId(addressBook);

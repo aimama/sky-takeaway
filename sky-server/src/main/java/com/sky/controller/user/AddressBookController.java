@@ -26,6 +26,7 @@ public class AddressBookController {
     @GetMapping("/list")
     @ApiOperation("查询当前登录用户的所有地址信息")
     public Result<List<AddressBook>> list() {
+        //设置当前userid为登录用户的id
         AddressBook addressBook = new AddressBook();
         addressBook.setUserId(BaseContext.getCurrentId());
         List<AddressBook> list = addressBookService.list(addressBook);
