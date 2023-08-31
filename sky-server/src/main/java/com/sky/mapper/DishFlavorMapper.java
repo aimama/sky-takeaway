@@ -24,9 +24,9 @@ public interface DishFlavorMapper {
     @Delete("delete from dish_flavor where id = #{id}")
     void deleteById(Long id);
     //回显
-    @Select("select * from dish_flavor where id = #{id}")
+    @Select("select * from dish_flavor where dish_id = #{dishId}")
     List<DishFlavor> getById(Long id);
     //根据ID查询对应的口味
-    @Select("select * from dish_flavor where id = #{id}")
+    @Select("select * from dish_flavor where dish_id = #{dishId}")
     List<DishFlavor> getByDishId(Long id);
 }

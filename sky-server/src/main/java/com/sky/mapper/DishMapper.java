@@ -63,7 +63,4 @@ public interface DishMapper {
     List<Dish> list(Dish dish);
 
 
-//    //根据名称获取对应信息（用于套餐管理的快速查询）
-//    @Select("select name from dish where name like concat('%','#{name}','%')")
-//    List<Dish> getByName_to_Setmeal(String name);
 }

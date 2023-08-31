@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.ShoppingCartMapper">
+    <select id="getList" resultType="com.sky.entity.ShoppingCart">
+        select * from shopping_cart
+        <where>
+            <if test="userId != null">user_id = #{userId}</if>
+            <if test="dishId != null">and dish_id = #{dishId}</if>
+            <if test="setmealId != null">and setmeal_id = #{setmealId}</if>
+            <if test="dishFlavor != null and dishFlavor != ''">and dish_flavor = #{dishFlavor}</if>
+        </where>
+    </select>
+
+    <update id="updateNumber">
+        update shopping_cart
+        <set>
+            <if test="name != null and name != ''">name = #{name}</if>
+            <if test="dishFlavor != null and dishFlavor != ''">,dish_flavor = #{dishFlavor}</if>
+            <if test="createTime != null">,create_time = #{createTime}</if>
+            <if test="number != null">,number = #{number}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getOne" resultType="com.sky.entity.ShoppingCart">
+        select *
+        from shopping_cart
+        # TODO动态使用where查询条件：
+        # prefix：通过自动识别是否有返回值后，在trim包含的内容上加上前缀，
+        # prefixOverrides：对于trim包含内容的首部进行指定内容的忽略（如：and | or）
+        <trim prefix="where" prefixOverrides="and">
+            <if test="dishId != null">and dish_id = #{dishId}</if>
+            <if test="dishFlavor != null and dishFlavor != ''">and dish_flavor = #{dishFlavor}</if>
+            <if test="setmealId != null">and setmeal_id = #{setmealId}</if>
+        </trim>
+    </select>
+</mapper>

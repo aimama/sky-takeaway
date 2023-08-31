@@ -124,8 +124,9 @@ public class DishServiceImpl implements DishService {
     public DishVO getById(Long id) {
         //菜品查询
         DishVO dishVO = dishMapper.getById(id);
+        Long dishId = dishVO.getId();
         //口味查询
-        List<DishFlavor> bf = dishFlavorMapper.getById(id);
+        List<DishFlavor> bf = dishFlavorMapper.getById(dishId);
         //封装
         dishVO.setFlavors(bf);
         return dishVO;
