@@ -2,6 +2,7 @@ package com.sky.dto;
 
 import com.sky.entity.OrderDetail;
 import lombok.Data;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -33,6 +34,8 @@ public class OrdersDTO implements Serializable {
     //支付方式 1微信，2支付宝
     private Integer payMethod;
 
+    private Integer payStatus;
+
     //实收金额
     private BigDecimal amount;
 
@@ -50,6 +53,29 @@ public class OrdersDTO implements Serializable {
 
     //收货人
     private String consignee;
+
+    private String cancelReason;
+
+    private String rejectionReason;
+
+    private LocalDateTime cancelTime;
+
+    private LocalDateTime estimatedDeliveryTime;
+
+    //配送状态  1立即送出  0选择具体时间
+    private Integer deliveryStatus;
+
+    //送达时间
+    private LocalDateTime deliveryTime;
+
+    //打包费
+    private int packAmount;
+
+    //餐具数量
+    private int tablewareNumber;
+
+    //餐具数量状态  1按餐量提供  0选择具体数量
+    private Integer tablewareStatus;
 
     private List<OrderDetail> orderDetails;
 

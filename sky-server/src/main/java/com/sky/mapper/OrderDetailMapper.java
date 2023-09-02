@@ -1,8 +1,11 @@
 package com.sky.mapper;
 
 import com.sky.entity.OrderDetail;
+import com.sky.vo.OrderVO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -15,4 +18,15 @@ public interface OrderDetailMapper {
     void insert(OrderDetail orderDetail);
     //插入多条数据
     void insertBatch(List<OrderDetail> orderDetailList);
+    //查询
+    List<OrderVO> getAndGetOrders(Long userId);
+    @Select("select * from order_detail where order_id = #{id}")
+    List<OrderDetail> getByOrderId(Long id);
+
+    /**
+     * 根据orderId删除信息
+     * @param id
+     */
+    @Delete("delete from order_detail where order_id = #{id}")
+    void deleteByOrderId(Long id);
 }
