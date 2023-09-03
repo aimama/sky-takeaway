@@ -47,4 +47,19 @@ public interface OrderMapper {
      * @return
      */
     List<OrderVO> getPageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    /**
+     * 查询支付超时的订单
+     * @return
+     */
+    @Select("select * from orders where pay_status = #{payStatus} and order_time < #{orderTime}")
+    List<Orders> getTimeOutOrder(Orders orders);
+
+    /**
+     * 查询当天所有处于派送未完成订单
+     * @param orders
+     * @return
+     */
+    @Select("select * from orders where status = #{status} and order_time < #{orderTime}")
+    List<Orders> getProcessDeliveryOrder(Orders orders);
 }
