@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
@@ -62,4 +63,11 @@ public interface OrderMapper {
      */
     @Select("select * from orders where status = #{status} and order_time < #{orderTime}")
     List<Orders> getProcessDeliveryOrder(Orders orders);
+
+    /**
+     * 统计营业额
+     * @param map
+     * @return
+     */
+    Double sumByTurnover(Map map);
 }
