@@ -175,7 +175,6 @@ public class OrderServiceImpl implements OrderService {
 
         orderMapper.update(orders);
 
-        //通过websocket向客户端浏览器推送消息
         Map map = new HashMap<>();
         map.put("type", 1);  //  1表示来单提醒，2表示客户催单
         map.put("orderId", ordersDB.getId());
@@ -183,6 +182,7 @@ public class OrderServiceImpl implements OrderService {
 
         String jsonString = JSON.toJSONString(map);
 
+        //通过websocket向客户端浏览器推送消息
         webSocketServer.sendToAllClient(jsonString);
     }
 
@@ -288,6 +288,34 @@ public class OrderServiceImpl implements OrderService {
         return orderVO;
     }
 
+    /**
+     * 催单
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public void reminder(Long id) {
+        // 根据订单id查询订单
+        Orders orders = Orders.builder().id(id).build();
+
+        Orders ordersDB = orderMapper.get(orders).get(0);
+        //查询该订单是否存在
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+
+        Map map = new HashMap<>();
+        map.put("type", 2);  //  1表示来单提醒，2表示客户催单
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号：" + ordersDB.getNumber());
+
+        String jsonString = JSON.toJSONString(map);
+
+        webSocketServer.sendToAllClient(jsonString);
+    }
+
+    //TODO 用户端与管理端分界线
 ///////////////////////////////////////////////////////////////////////////////
     //管理端
 
@@ -456,4 +484,5 @@ public class OrderServiceImpl implements OrderService {
                 .build();
         orderMapper.update(orders);
     }
+
 }

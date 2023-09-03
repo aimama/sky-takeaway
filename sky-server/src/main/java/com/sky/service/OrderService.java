@@ -109,8 +109,15 @@ public interface OrderService {
     /**
      * 完成订单
      *
-     * @param ordersDTO
      * @return
      */
     void complete(Long id);
+
+    /**
+     * 催单
+     *
+     * @param id
+     * @return
+     */
+    void reminder(Long id);
 }
