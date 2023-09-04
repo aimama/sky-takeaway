@@ -5,16 +5,19 @@ import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 
 public interface ReportService {
     /**
      * 营业额统计
+     *
      * @param begin
      * @param end
      * @return
      */
     TurnoverReportVO getTurnover(LocalDate begin, LocalDate end);
+
     /**
      * 用户统计接口
      *
@@ -26,6 +29,7 @@ public interface ReportService {
 
     /**
      * 订单统计接口
+     *
      * @param begin
      * @param end
      * @return
@@ -40,4 +44,11 @@ public interface ReportService {
      * @return
      */
     SalesTop10ReportVO getTop10(LocalDate begin, LocalDate end);
+
+    /**
+     * 导出报表
+     *
+     * @param response
+     */
+    void exportBussinessData(HttpServletResponse response);
 }

@@ -6,15 +6,18 @@ import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
-import com.sky.vo.OrderReportVO;
-import com.sky.vo.SalesTop10ReportVO;
-import com.sky.vo.TurnoverReportVO;
-import com.sky.vo.UserReportVO;
+import com.sky.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,6 +35,8 @@ public class ReportServiceImpl implements ReportService {
     private OrderMapper orderMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private WorkspaceServiceImpl workspaceServiceImpl;
 
     /**
      * 营业额统计
@@ -239,5 +244,74 @@ public class ReportServiceImpl implements ReportService {
         String number = StringUtils.join(numberList, ",");
 
         return SalesTop10ReportVO.builder().nameList(name).numberList(number).build();
+    }
+
+    /**
+     * 导出报表
+     *
+     * @param response
+     */
+    @Override
+    public void exportBussinessData(HttpServletResponse response) {
+        //设定时间为当月
+        LocalDate begin = LocalDate.now().plusDays(-30);
+        LocalDate end = LocalDate.now().plusDays(-1);
+        //取得表中所要求的概览数据(限制一天时间)
+        BusinessDataVO businessData = workspaceServiceImpl.getBusinessData
+                (LocalDateTime.of(begin, LocalTime.MIN), LocalDateTime.of(end, LocalTime.MAX));//设定起始时刻.与结束时刻
+        //将模板读入内存中
+        try {
+            InputStream file = this.getClass().getClassLoader().getResourceAsStream("template/运营数据报表模板.xlsx");
+            //在内存中新建文档，将file内容引入到该文档中
+            XSSFWorkbook excel = new XSSFWorkbook(file);
+            //获取名为sheet1的标签页
+            XSSFSheet sheet = excel.getSheet("Sheet1");
+
+            //在第二行第二列写入日期范围
+            sheet.getRow(1).getCell(1).setCellValue(begin + " --- " + end);
+
+            //四行三列写入对应数据        1。获取所有第四行数据
+            XSSFRow row = sheet.getRow(3);
+            //2.获取第四列所有单元格并写入数据
+            row.getCell(2).setCellValue(businessData.getTurnover());
+            row.getCell(4).setCellValue(businessData.getOrderCompletionRate());
+            row.getCell(6).setCellValue(businessData.getNewUsers());
+            //获取第5行
+            row = sheet.getRow(4);
+            row.getCell(2).setCellValue(businessData.getValidOrderCount());
+            row.getCell(4).setCellValue(businessData.getUnitPrice());
+
+            //写入明细数据
+            //根据表格限制，只能输入到从第7行到第37行内
+            for (int i = 0; i < 30; i++) {
+                //设定每天时间
+                LocalDate date = begin.plusDays(i);
+                //获取明细信息(每天的信息)
+                businessData = workspaceServiceImpl.getBusinessData(LocalDateTime.of(date, LocalTime.MIN), LocalDateTime.of(date, LocalTime.MAX));
+                //获取第X行
+                row = sheet.getRow(i + 7);
+                //获取列数，写入数据
+                row.getCell(1).setCellValue(date.toString());
+                row.getCell(2).setCellValue(businessData.getTurnover());
+                row.getCell(3).setCellValue(businessData.getValidOrderCount());
+                row.getCell(4).setCellValue(businessData.getOrderCompletionRate());
+                row.getCell(5).setCellValue(businessData.getUnitPrice());
+                row.getCell(6).setCellValue(businessData.getNewUsers());
+            }
+
+            //通过输出流将文件下载给客户端浏览器中
+            ServletOutputStream outputStream = response.getOutputStream();
+            excel.write(outputStream);      //将流文件数据写入到excel中
+            //关闭流
+            outputStream.flush();
+            outputStream.close();
+            excel.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //获取模板
     }
 }

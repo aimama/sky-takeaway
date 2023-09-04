@@ -14,6 +14,7 @@ import com.sky.vo.SetmealOverViewVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ import java.util.Map;
 public class WorkspaceServiceImpl implements WorkspaceService {
 
     @Autowired
-    private OrderMapper  orderMapper;
+    private OrderMapper orderMapper;
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -34,6 +35,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     /**
      * 根据时间段统计营业数据
+     *
      * @param begin
      * @param end
      * @return
@@ -48,8 +50,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
          */
 
         Map map = new HashMap();
-        map.put("begin",begin);
-        map.put("end",end);
+        map.put("begin", begin);
+        map.put("end", end);
 
         //查询总订单数
         Integer totalOrderCount = orderMapper.getOrdersStatistics(map);
@@ -57,7 +59,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         map.put("status", Orders.COMPLETED);
         //营业额
         Double turnover = orderMapper.sumByTurnover(map);
-        turnover = turnover == null? 0.0 : turnover;
+        turnover = turnover == null ? 0.0 : turnover;
 
         //有效订单数
         Integer validOrderCount = orderMapper.getOrdersStatistics(map);
@@ -65,7 +67,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         Double unitPrice = 0.0;
 
         Double orderCompletionRate = 0.0;
-        if(totalOrderCount != 0 && validOrderCount != 0){
+        if (totalOrderCount != 0 && validOrderCount != 0) {
             //订单完成率
             orderCompletionRate = validOrderCount.doubleValue() / totalOrderCount;
             //平均客单价
@@ -160,4 +162,6 @@ public class WorkspaceServiceImpl implements WorkspaceService {
                 .discontinued(discontinued)
                 .build();
     }
+
+
 }
