@@ -9,11 +9,21 @@
              (#{od.name},#{od.image},#{od.orderId},#{od.dishId},#{od.setmealId},#{od.dishFlavor},#{od.number},#{od.amount})
         </foreach>
     </insert>
+
     <select id="getAndGetOrders" resultType="com.sky.vo.OrderVO">
         select orders.*, od.*
         from orders
                  left join order_detail od on orders.id = od.order_id
         where user_id = #{userId}
         order by order_time desc
+    </select>
+
+    <select id="getTop10" resultType="com.sky.entity.OrderDetail">
+        select name , number from order_detail
+        <where>
+            <if test="orderIds != null">
+                and order_id = #{orderId}
+            </if>
+        </where>
     </select>
 </mapper>

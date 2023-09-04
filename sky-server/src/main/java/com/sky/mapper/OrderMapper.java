@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 import com.sky.vo.OrderVO;
@@ -70,4 +71,18 @@ public interface OrderMapper {
      * @return
      */
     Double sumByTurnover(Map map);
+
+    /**
+     * 条件获取订单数量
+     * @param map
+     * @return
+     */
+    Integer getOrdersStatistics(Map map);
+
+    /**
+     * 获取限定时段内的所有订单id
+     * @param map
+     * @return
+     */
+    List<GoodsSalesDTO> getSalesTop10(Map map);
 }

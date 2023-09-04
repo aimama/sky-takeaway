@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderDetailMapper {
@@ -29,4 +30,11 @@ public interface OrderDetailMapper {
      */
     @Delete("delete from order_detail where order_id = #{id}")
     void deleteByOrderId(Long id);
+
+    /**
+     * 按照数量降序查找前10
+     * @param map
+     * @return
+     */
+    List<OrderDetail> getTop10(Map map);
 }
